@@ -1,0 +1,19 @@
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}"/>
+    </plugin-info>
+
+    <postBuildCompletedAction key="zookeeperPublisher" name="ZooKeeper Publisher"
+                              class="net.ceg.bamboo.ZooKeeperPublisherTask">
+            
+        <configuration class="net.ceg.bamboo.ZooKeeperPublisherTaskConfigurator"/>
+        <resource type="freemarker" name="edit" location="templates/plugins/zookeeperPublisher/zookeeperEdit.ftl"/>
+        <resource type="freemarker" name="view" location="templates/plugins/zookeeperPublisher/zookeeperView.ftl"/>
+        <description>An automatic labelling plugin.</description>
+    </postBuildCompletedAction>
+
+    <!-- internationalize your plugin -->
+    <resource type="i18n" name="net.ceg.bamboo language" location="english"/>
+</atlassian-plugin>
