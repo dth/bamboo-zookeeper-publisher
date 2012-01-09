@@ -10,12 +10,12 @@
     <version>1.0-SNAPSHOT</version>
 
     <organization>
-        <name>Example Company</name>
-        <url>http://www.example.com/</url>
+        <name>CEG, Inc.</name>
+        <url>http://www.ceg.net</url>
     </organization>
 
     <name>zookeeper-publisher</name>
-    <description>This is the net.ceg.bamboo:zookeeper-publisher plugin for Atlassian Bamboo.</description>
+    <description>TODO</description>
     <packaging>atlassian-plugin</packaging>
 
     <properties>
@@ -31,25 +31,13 @@
             <version>${bamboo.version}</version>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
-            <groupId>org.apache.hadoop</groupId>
+            <groupId>org.apache.zookeeper</groupId>
             <artifactId>zookeeper</artifactId>
             <version>3.3.1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.jms</groupId>
-                    <artifactId>jms</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.sun.jdmk</groupId>
-                    <artifactId>jmxtools</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.sun.jmx</groupId>
-                    <artifactId>jmxri</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
+         
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -70,7 +58,7 @@
                     <productDataVersion>${bamboo.data.version}</productDataVersion>
                 </configuration>
             </plugin>
-
+          
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>

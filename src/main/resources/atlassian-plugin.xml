@@ -5,14 +5,21 @@
         <vendor name="${project.organization.name}" url="${project.organization.url}"/>
     </plugin-info>
 
-    <postBuildCompletedAction key="zookeeperPublisher" name="ZooKeeper Publisher"
-                              class="net.ceg.bamboo.ZooKeeperPublisherTask">
-            
+
+    <taskType key="net.ceg.bamboo.ZooKeeperPublisherTask" name="ZooKeeper Publishing Task">
+
+        <category name="deployment"/>
+
         <configuration class="net.ceg.bamboo.ZooKeeperPublisherTaskConfigurator"/>
-        <resource type="freemarker" name="edit" location="templates/plugins/zookeeperPublisher/zookeeperEdit.ftl"/>
-        <resource type="freemarker" name="view" location="templates/plugins/zookeeperPublisher/zookeeperView.ftl"/>
-        <description>An automatic labelling plugin.</description>
-    </postBuildCompletedAction>
+        <resource type="freemarker" name="edit" location="zookeeperEdit.ftl"/>
+        <resource type="freemarker" name="view" location="zookeeperView.ftl"/>
+        <description>Publish the build results to ZooKeeper</description>
+    </taskType>
+
+    <web-item key="configureZookeeperPlugin" name="Configure Zookeeper Plugin" section="system.admin/plugins">
+      <label key="Zookeeper Plugin"/>
+      <link linkId="configureZookeeperPlugin">/admin/viewConfigureZookeeperPlugin.action</link>
+    </web-item>
 
     <!-- internationalize your plugin -->
     <resource type="i18n" name="net.ceg.bamboo language" location="english"/>

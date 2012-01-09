@@ -21,7 +21,7 @@ public class ZooKeeperPublisherTaskConfigurator extends AbstractTaskConfigurator
     public Map<String, String> generateTaskConfigMap(@NotNull final ActionParametersMap params, @Nullable final TaskDefinition previousTaskDefinition)
     {
         final Map<String, String> config = super.generateTaskConfigMap(params, previousTaskDefinition);
-        config.put("say", params.getString("say"));
+        config.put("path", params.getString("path"));
         return config;
     }
 
@@ -30,7 +30,8 @@ public class ZooKeeperPublisherTaskConfigurator extends AbstractTaskConfigurator
     {
         super.populateContextForCreate(context);
 
-        context.put("say", "Hello, World!");
+        context.put("path", "/foo/bar/release-");
+        context.put("data", "app={} version={} environment={} cluster={} datacentre={}");
     }
 
     @Override
@@ -38,14 +39,16 @@ public class ZooKeeperPublisherTaskConfigurator extends AbstractTaskConfigurator
     {
         super.populateContextForEdit(context, taskDefinition);
 
-        context.put("say", taskDefinition.getConfiguration().get("say"));
+        context.put("path", taskDefinition.getConfiguration().get("path"));
+        context.put("data", taskDefinition.getConfiguration().get("data"));
     }
 
     @Override
     public void populateContextForView(@NotNull final Map<String, Object> context, @NotNull final TaskDefinition taskDefinition)
     {
         super.populateContextForView(context, taskDefinition);
-        context.put("say", taskDefinition.getConfiguration().get("say"));
+        context.put("path", taskDefinition.getConfiguration().get("path"));
+        context.put("data", taskDefinition.getConfiguration().get("data"));
     }
 
     @Override
@@ -53,10 +56,15 @@ public class ZooKeeperPublisherTaskConfigurator extends AbstractTaskConfigurator
     {
         super.validate(params, errorCollection);
 
-        final String sayValue = params.getString("say");
-        if (StringUtils.isEmpty(sayValue))
+        final String pathValue = params.getString("path");
+        if (StringUtils.isEmpty(pathValue))
         {
-            errorCollection.addError("say", textProvider.getText("net.ceg.bamboo.say.error"));
+            errorCollection.addError("path", textProvider.getText("net.ceg.bamboo.config.path.error"));
+        }
+        final String dataValue = params.getString("data");
+        if (StringUtils.isEmpty(dataValue))
+        {
+            errorCollection.addError("data", textProvider.getText("net.ceg.bamboo.config.data.error"));
         }
     }
 
