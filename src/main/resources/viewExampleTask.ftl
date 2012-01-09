@@ -1,1 +1,0 @@
-[@ww.label labelKey="net.ceg.bamboo.say" name="say"/]
