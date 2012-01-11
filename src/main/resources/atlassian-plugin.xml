@@ -6,7 +6,8 @@
     </plugin-info>
 
 
-    <taskType key="net.ceg.bamboo.ZooKeeperPublisherTask" name="ZooKeeper Publishing Task">
+    <taskType key="net.ceg.bamboo.ZooKeeperPublisherTask" name="ZooKeeper Publishing Task"
+            class="net.ceg.bamboo.ZooKeeperPublisherTask">
 
         <category name="deployment"/>
 

@@ -11,6 +11,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 public class ZooKeeperPublisherTaskConfigurator extends AbstractTaskConfigurator
 {
@@ -21,7 +23,11 @@ public class ZooKeeperPublisherTaskConfigurator extends AbstractTaskConfigurator
     public Map<String, String> generateTaskConfigMap(@NotNull final ActionParametersMap params, @Nullable final TaskDefinition previousTaskDefinition)
     {
         final Map<String, String> config = super.generateTaskConfigMap(params, previousTaskDefinition);
+        config.put("connection", params.getString("connection"));
+        config.put("artifact", params.getString("artifact"));
+        config.put("artifactRegex", params.getString("artifactRegex"));
         config.put("path", params.getString("path"));
+        config.put("data", params.getString("data"));
         return config;
     }
 
@@ -29,7 +35,9 @@ public class ZooKeeperPublisherTaskConfigurator extends AbstractTaskConfigurator
     public void populateContextForCreate(@NotNull final Map<String, Object> context)
     {
         super.populateContextForCreate(context);
-
+        context.put("connection", "");
+        context.put("artifact", true);
+        context.put("artifactRegex", "*.rpm");
         context.put("path", "/foo/bar/release-");
         context.put("data", "app={} version={} environment={} cluster={} datacentre={}");
     }
@@ -39,6 +47,9 @@ public class ZooKeeperPublisherTaskConfigurator extends AbstractTaskConfigurator
     {
         super.populateContextForEdit(context, taskDefinition);
 
+        context.put("connection", taskDefinition.getConfiguration().get("connection"));
+        context.put("artifact", taskDefinition.getConfiguration().get("artifact"));
+        context.put("artifactRegex", taskDefinition.getConfiguration().get("artifactRegex"));
         context.put("path", taskDefinition.getConfiguration().get("path"));
         context.put("data", taskDefinition.getConfiguration().get("data"));
     }
@@ -47,6 +58,9 @@ public class ZooKeeperPublisherTaskConfigurator extends AbstractTaskConfigurator
     public void populateContextForView(@NotNull final Map<String, Object> context, @NotNull final TaskDefinition taskDefinition)
     {
         super.populateContextForView(context, taskDefinition);
+        context.put("connection", taskDefinition.getConfiguration().get("connection"));
+        context.put("artifact", taskDefinition.getConfiguration().get("artifact"));
+        context.put("artifactRegex", taskDefinition.getConfiguration().get("artifactRegex"));
         context.put("path", taskDefinition.getConfiguration().get("path"));
         context.put("data", taskDefinition.getConfiguration().get("data"));
     }
@@ -55,6 +69,21 @@ public class ZooKeeperPublisherTaskConfigurator extends AbstractTaskConfigurator
     public void validate(@NotNull final ActionParametersMap params, @NotNull final ErrorCollection errorCollection)
     {
         super.validate(params, errorCollection);
+
+        final String connectionValue = params.getString("connection");
+        if (StringUtils.isEmpty(connectionValue))
+        {
+            errorCollection.addError("connection", textProvider.getText("net.ceg.bamboo.config.connection.error"));
+        }
+
+        final Boolean artifactValue = params.getBoolean("artifact");
+        final String artifactRegex = params.getString("artifactRegex");
+        if (artifactValue)
+        {
+            if(StringUtils.isEmpty(artifactRegex) || !isValidRegex(artifactRegex)) {
+                errorCollection.addError("artifactRegex", textProvider.getText("net.ceg.bamboo.config.artifactRegex.error"));
+            }
+        }
 
         final String pathValue = params.getString("path");
         if (StringUtils.isEmpty(pathValue))
@@ -66,6 +95,14 @@ public class ZooKeeperPublisherTaskConfigurator extends AbstractTaskConfigurator
         {
             errorCollection.addError("data", textProvider.getText("net.ceg.bamboo.config.data.error"));
         }
+    }
+
+    private boolean isValidRegex(String regex) {
+        try {
+            Pattern.compile(regex);
+            return true;
+        } catch (PatternSyntaxException pse) { }
+        return false;
     }
 
     public void setTextProvider(final TextProvider textProvider)
